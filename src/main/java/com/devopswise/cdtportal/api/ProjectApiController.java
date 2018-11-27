@@ -1,6 +1,7 @@
 package com.devopswise.cdtportal.api;
 
 import com.devopswise.cdtportal.model.Project;
+import com.devopswise.cdtportal.project.ProjectService;
 import com.devopswise.cdtportal.tool.Gitea;
 
 import io.gitea.ApiClient;
@@ -13,6 +14,7 @@ import io.gitea.model.CreateOrgOption;
 import io.gitea.model.Organization;
 import io.swagger.annotations.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,9 @@ import javax.validation.Valid;
 @Controller
 public class ProjectApiController implements ProjectApi {
 
+	@Autowired
+	private ProjectService projectService;
+	
     public ResponseEntity<Object> addproject(@ApiParam(value = "Project description to create" ,required=true )  @Valid @RequestBody Project body) {
         // do some magic!
     	//TODO read config from file
@@ -73,6 +78,8 @@ public class ProjectApiController implements ProjectApi {
     	
     	
     	Project project = new Project();
+    	project.setKey(body.getKey());
+    	project.setName(body.getName());
         boolean succeeded = false;
     	
     	try {
@@ -94,23 +101,44 @@ public class ProjectApiController implements ProjectApi {
             	project.setKey(body.getKey());
             	project.setDescription(body.getDescription());    			
     		} else {
-    			/* cleanup partially created project */
     		}
 
     	}
     	
+    	projectService.addProject(project);
         return new ResponseEntity<Object>(project, HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deleteProject(@ApiParam(value = "project id to delete",required=true ) @PathVariable("projectId") Long projectId,
         @ApiParam(value = "" ) @RequestHeader(value="api_key", required=false) String apiKey) {
-        // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    	Project projectToDelete = projectService.getProject(projectId);
+        
+    	boolean succeeded = false;
+        try {
+    		// https://stackoverflow.com/a/6205288/1047804
+    		Gitea giteaClient = new Gitea("http://gitea.cdt.devopswise.co.uk/api/v1", "local.admin", "Jah8q123!");
+    		if (! giteaClient.projectExist(projectToDelete.getKey())){
+    			throw new CDTException("Gitea organization doesnt exists");
+    		}
+    		giteaClient.deleteOrg(projectToDelete.getKey());
+    		succeeded = true;			
+        } catch (CDTException e) {
+    		succeeded = false;
+    	} catch (ApiException e) {
+    		succeeded = false;
+    		//"Exception when calling AdminApi#adminDeleteUser"
+    	} finally {
+    		if (succeeded) {
+    	    	projectService.deleteProject(projectId);    			
+    		}
+    	}
+    	return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     public ResponseEntity<List<Project>> findProjectsByStatus( @NotNull@ApiParam(value = "Status values that need to be considered for filter", required = true, allowableValues = "available, pending, sold") @RequestParam(value = "status", required = true) List<String> status) {
         // do some magic!
-        return new ResponseEntity<List<Project>>(HttpStatus.OK);
+    	List<Project> projects = projectService.getAllProjects();
+        return new ResponseEntity<List<Project>>(projects, HttpStatus.OK);
     }
 
     public ResponseEntity<List<Project>> findProjectsByTags( @NotNull@ApiParam(value = "Tags to filter by", required = true) @RequestParam(value = "tags", required = true) List<String> tags) {

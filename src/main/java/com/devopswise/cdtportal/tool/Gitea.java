@@ -73,6 +73,12 @@ public class Gitea extends GitTool {
         Organization result = giteaAdminApiInstance.adminCreateOrg(username, createOrgOption);
         return result;
 	}
+	
+    public void deleteOrg(String orgName) throws ApiException{
+    	AdminApi apiInstance = new AdminApi();
+    	String username = orgName; // String | username of user to delete
+    	apiInstance.adminDeleteUser(username);
+    }
 
 	public void setDebug(boolean debug) {
 		this.debug = debug;

@@ -3,22 +3,33 @@ package com.devopswise.cdtportal.model;
 import java.util.Objects;
 import com.devopswise.cdtportal.model.Tag;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+
 
 /**
  * A project for sale in the project store
  */
 @ApiModel(description = "A project for sale in the project store")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-11-22T22:35:56.040Z")
-
+//following Entity and Id is created by us.
+@Entity
 public class Project   {
+	
+  @Id
   @JsonProperty("id")
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  //@GeneratedValue
   private Long id = null;
 
   @JsonProperty("name")
@@ -28,12 +39,18 @@ public class Project   {
   private String key = null;
 
   @JsonProperty("users")
+  @Transient
+  //@OneToMany
+  //@JoinColumn
   private List<String> users = null;
 
   @JsonProperty("lead")
   private String lead = null;
 
   @JsonProperty("tags")
+  @Transient
+  //@OneToMany
+  //@JoinColumn
   private List<Tag> tags = null;
 
   @JsonProperty("description")
@@ -100,7 +117,7 @@ public class Project   {
   public void setKey(String key) {
     this.key = key;
   }
-
+  
   public Project users(List<String> users) {
     this.users = users;
     return this;
@@ -169,7 +186,6 @@ public class Project   {
   @ApiModelProperty(value = "")
 
   @Valid
-
   public List<Tag> getTags() {
     return tags;
   }
