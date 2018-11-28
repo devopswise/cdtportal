@@ -20,9 +20,9 @@ node('jenkins-ssh-slave-docker-cli') {
         }
     }
     
-    stage('debug'){
-        sh 'sleep infinity'
-    }
+    //stage('debug'){
+    //    sh 'sleep infinity'
+    //}
     
     stage('Build image') {
         /* This builds the actual image; synonymous to
