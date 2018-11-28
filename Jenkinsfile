@@ -9,6 +9,13 @@ node('jenkins-ssh-slave-docker-cli') {
 
     stage('Maven build'){
         withDockerContainer('maven:3.6-jdk-8-slim') {
+          sh 'mvn install:install-file \
+			   -Dfile=./tmp/java-gitea-api-1.7.0-SNAPSHOT.jar \
+			   -DgroupId=com.github.zeripath \
+			   -DartifactId=java-gitea-api \
+			   -Dversion=1.7.0-SNAPSHOT \
+			   -Dpackaging=jar \
+			   -DgeneratePom=true'
           sh 'mvn package'
         }
     }
