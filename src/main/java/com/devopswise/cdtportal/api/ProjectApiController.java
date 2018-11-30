@@ -3,6 +3,8 @@ package com.devopswise.cdtportal.api;
 import com.devopswise.cdtportal.model.Project;
 import com.devopswise.cdtportal.project.ProjectService;
 import com.devopswise.cdtportal.tool.Gitea;
+import com.devopswise.cdtportal.tool.Jenkins;
+import com.offbytwo.jenkins.helper.JenkinsVersion;
 
 import io.gitea.ApiClient;
 import io.gitea.ApiException;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.validation.constraints.*;
@@ -37,66 +40,38 @@ public class ProjectApiController implements ProjectApi {
 	@Autowired
 	private ProjectService projectService;
 	
+	@Autowired
+	private Jenkins jenkins;
+	
     public ResponseEntity<Object> addproject(@ApiParam(value = "Project description to create" ,required=true )  @Valid @RequestBody Project body) {
-        // do some magic!
-    	//TODO read config from file
-    	//create proper exception classes
-    	/* 
-			Try
-			    Get gittool
-			    If (gitttool.orgExist())
-			        Throw existexc
-			    Get citool
-			    If (citool.exist)
-			         Throw existExc
-			     Gittool.createProj()
-			     Citool.createProj()
-			Catch existException
-			Catch createexception
-			      Succeeded = false
-			Catch exception
-			      Succeeded = false
-			Finally
-			     If not succeeded
-			      If gitproject != null 
-			         Gittool.delete()
-			      If ciproject != null
-			         Citool.delete()
-			Try
-			     Try
-			         Check jira
-			         Check ...
-			      Catch apiexception
-			          If existexc set msg throwexistexception
-			      Create jira
-			      Create
-			 Catch apiexception
-			 Catch exist exception
-			 Finally
-			Return
-    	 */
-    	
-    	
     	Project project = new Project();
     	project.setKey(body.getKey());
     	project.setName(body.getName());
         boolean succeeded = false;
     	
     	try {
-    		// make this singleton
-    		// https://stackoverflow.com/a/6205288/1047804
+    	    
     		Gitea giteaClient = new Gitea("http://gitea.cdt.devopswise.co.uk/api/v1", "local.admin", "Jah8q123!");
     		if (giteaClient.projectExist(body.getKey())){
     			throw new CDTException("Gitea organization already exists");
     		}
     		
     	    Organization giteaOrg = giteaClient.createOrg(body.getKey(), body.getName(), body.getDescription());
+    	    
+    	    if (jenkins.projectExist(body.getKey())){
+    	    	throw new CDTException("Jenkins folder already exists");
+    	    }
+
+    	    jenkins.createFolder(body.getKey());
     		succeeded = true;		
     	} catch (CDTException e) {
     		
     	} catch (ApiException e) {
     		
-    	} finally {
+    	} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
     		if (succeeded) {
             	project.setKey(body.getKey());
             	project.setDescription(body.getDescription());    			
@@ -121,13 +96,17 @@ public class ProjectApiController implements ProjectApi {
     			throw new CDTException("Gitea organization doesnt exists");
     		}
     		giteaClient.deleteOrg(projectToDelete.getKey());
+    		jenkins.deleteFolder(projectToDelete.getKey());
     		succeeded = true;			
         } catch (CDTException e) {
     		succeeded = false;
     	} catch (ApiException e) {
     		succeeded = false;
     		//"Exception when calling AdminApi#adminDeleteUser"
-    	} finally {
+    	} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
     		if (succeeded) {
     	    	projectService.deleteProject(projectId);    			
     		}
