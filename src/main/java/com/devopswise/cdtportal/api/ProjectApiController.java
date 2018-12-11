@@ -51,7 +51,7 @@ public class ProjectApiController implements ProjectApi {
     	
     	try {
     	    
-    		Gitea giteaClient = new Gitea("http://gitea.cdt.devopswise.co.uk/api/v1", "local.admin", "Jah8q123!");
+    		Gitea giteaClient = new Gitea("https://gitea.cdt.devopswise.co.uk/api/v1", "local.admin", "Jah8q123!");
     		if (giteaClient.projectExist(body.getKey())){
     			throw new CDTException("Gitea organization already exists");
     		}
