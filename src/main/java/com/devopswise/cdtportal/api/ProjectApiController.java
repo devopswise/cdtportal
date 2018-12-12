@@ -91,7 +91,7 @@ public class ProjectApiController implements ProjectApi {
     	boolean succeeded = false;
         try {
     		// https://stackoverflow.com/a/6205288/1047804
-    		Gitea giteaClient = new Gitea("http://gitea.cdt.devopswise.co.uk/api/v1", "local.admin", "Jah8q123!");
+    		Gitea giteaClient = new Gitea("https://gitea.cdt.devopswise.co.uk/api/v1", "local.admin", "Jah8q123!");
     		if (! giteaClient.projectExist(projectToDelete.getKey())){
     			throw new CDTException("Gitea organization doesnt exists");
     		}

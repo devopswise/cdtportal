@@ -1,0 +1,1 @@
+java -jar ./swagger-codegen-cli-2.2.3.jar generate -i E:/home/onur/workspace/cdtportal/misc/swagger.yaml --api-package com.devopswise.cdtportal.api --model-package com.devopswise.cdtportal.model --group-id com.devopswise --artifact-id cdtportal --artifact-version 0.9.2 -l spring -o spring-swagger-codegen-api-server
