@@ -2,10 +2,10 @@ package com.devopswise.cdtportal.tool;
 
 import com.devopswise.cdtportal.api.CDTException;
 
-public class GitTool implements GitToolIf {
+public class ChatTool implements CDTToolIf {
 
 	@Override
-	public String getVersion() {
+	public String getVersion() throws CDTException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -15,4 +15,5 @@ public class GitTool implements GitToolIf {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 }

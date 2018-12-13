@@ -3,6 +3,7 @@ package com.devopswise.cdtportal.api;
 
 import io.swagger.annotations.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.devopswise.cdtportal.model.ToolStatus;
+import com.devopswise.cdtportal.tool.Jenkins;
+import com.devopswise.cdtportal.tool.RocketChat;
 
 import java.util.List;
 
@@ -23,13 +26,20 @@ import javax.validation.Valid;
 
 @Controller
 public class ToolApiController implements ToolApi {
+	@Autowired
+	private Jenkins jenkins;
 
+	@Autowired
+	private RocketChat rocketChat;
 
-
-    public ResponseEntity<ToolStatus> toolStatus() {
-        // do some magic!
+    public ResponseEntity<ToolStatus> toolStatus() throws CDTException {
     	ToolStatus status = new ToolStatus();
-    	status.setJenkins("2.221.1");
+    	status.setJenkins(jenkins.getVersion());
+    	//status.setGitea("not implemented");
+    	//rocketChat.projectExist("HELLO");
+    	status.setRocketChat(rocketChat.getVersion());
+    	status.setGitea("not-implemented");
+    	
         return new ResponseEntity<ToolStatus>(status, HttpStatus.OK);
     }
 

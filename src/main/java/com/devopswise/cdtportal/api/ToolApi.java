@@ -34,6 +34,6 @@ public interface ToolApi {
     @RequestMapping(value = "/tool/status",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<ToolStatus> toolStatus();
+    ResponseEntity<ToolStatus> toolStatus() throws CDTException;
 
 }

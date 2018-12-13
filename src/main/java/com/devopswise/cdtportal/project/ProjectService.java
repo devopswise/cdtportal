@@ -29,6 +29,15 @@ public class ProjectService {
 		return (Project) projectRepository.findOne(id);
 	}
 	
+	public Project getProject(String key){
+		List<Project> projects = getAllProjects();
+		for(Project p:projects){
+			if (p.getKey().equalsIgnoreCase(key)){
+				return p;
+			}
+		}
+		return null;
+	}
 	public void addProject(Project project){
 		projectRepository.save(project);
 	}

@@ -1,5 +1,8 @@
 package com.devopswise.cdtportal.tool;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.devopswise.cdtportal.api.CDTException;
 
 import io.gitea.ApiClient;
@@ -11,14 +14,19 @@ import io.gitea.auth.HttpBasicAuth;
 import io.gitea.model.CreateOrgOption;
 import io.gitea.model.Organization;
 
+@Service
 public class Gitea extends GitTool {
     private ApiClient client = null;
     private String baseUrl = null;
     private String username = null;
     private String password = null;
+    
+    @Value("${gitea.debug}")
     private boolean debug = false;
     
-	public Gitea(String baseUrl, String username, String password) {
+	public Gitea(@Value("${gitea.baseUrl}")String baseUrl, 
+			@Value("${gitea.username}")String username, 
+			@Value("${gitea.password}")String password) {
 		super();
 		this.baseUrl = baseUrl;
 		this.username = username;

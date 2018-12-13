@@ -63,12 +63,6 @@ public class Jenkins implements CIToolIf {
 	}
 
 	@Override
-	public boolean ping() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public boolean projectExist(String projectKey) throws CDTException {
 		boolean result = false;
 		Map<String, Job> jobs;

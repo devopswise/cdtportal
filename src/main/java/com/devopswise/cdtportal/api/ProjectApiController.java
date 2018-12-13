@@ -4,6 +4,7 @@ import com.devopswise.cdtportal.model.Project;
 import com.devopswise.cdtportal.project.ProjectService;
 import com.devopswise.cdtportal.tool.Gitea;
 import com.devopswise.cdtportal.tool.Jenkins;
+import com.devopswise.cdtportal.tool.RocketChat;
 import com.offbytwo.jenkins.helper.JenkinsVersion;
 
 import io.gitea.ApiClient;
@@ -43,6 +44,12 @@ public class ProjectApiController implements ProjectApi {
 	@Autowired
 	private Jenkins jenkins;
 	
+	@Autowired
+	private RocketChat rocketChat;
+	
+	@Autowired
+	private Gitea gitea;
+	
     public ResponseEntity<Object> addproject(@ApiParam(value = "Project description to create" ,required=true )  @Valid @RequestBody Project body) {
     	Project project = new Project();
     	project.setKey(body.getKey());
@@ -50,19 +57,23 @@ public class ProjectApiController implements ProjectApi {
         boolean succeeded = false;
     	
     	try {
-    	    
-    		Gitea giteaClient = new Gitea("https://gitea.cdt.devopswise.co.uk/api/v1", "local.admin", "Jah8q123!");
-    		if (giteaClient.projectExist(body.getKey())){
+    		if (gitea.projectExist(body.getKey())){
     			throw new CDTException("Gitea organization already exists");
     		}
     		
-    	    Organization giteaOrg = giteaClient.createOrg(body.getKey(), body.getName(), body.getDescription());
+    	    Organization giteaOrg = gitea.createOrg(body.getKey(), body.getName(), body.getDescription());
     	    
     	    if (jenkins.projectExist(body.getKey())){
     	    	throw new CDTException("Jenkins folder already exists");
     	    }
 
     	    jenkins.createFolder(body.getKey());
+    	    
+    	    if(rocketChat.projectExist(body.getKey())){
+    	    	throw new CDTException("RocketChat private group already exists: "+body.getKey());
+    	    }
+    	    rocketChat.createPrivateRoom(body.getKey());
+    	    
     		succeeded = true;		
     	} catch (CDTException e) {
     		
@@ -77,11 +88,15 @@ public class ProjectApiController implements ProjectApi {
             	project.setDescription(body.getDescription());    			
     		} else {
     		}
-
     	}
-    	
-    	projectService.addProject(project);
-        return new ResponseEntity<Object>(project, HttpStatus.OK);
+    	if (succeeded){
+        	projectService.addProject(project);
+        	Project projectCreated = projectService.getProject(project.getKey());
+            return new ResponseEntity<Object>(projectCreated, HttpStatus.OK);    		
+    	} else {
+    		ApiException ex = new ApiException("Cannot create");
+            return new ResponseEntity<Object>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
     }
 
     public ResponseEntity<Void> deleteProject(@ApiParam(value = "project id to delete",required=true ) @PathVariable("projectId") Long projectId,
@@ -90,13 +105,12 @@ public class ProjectApiController implements ProjectApi {
         
     	boolean succeeded = false;
         try {
-    		// https://stackoverflow.com/a/6205288/1047804
-    		Gitea giteaClient = new Gitea("https://gitea.cdt.devopswise.co.uk/api/v1", "local.admin", "Jah8q123!");
-    		if (! giteaClient.projectExist(projectToDelete.getKey())){
+    		if (! gitea.projectExist(projectToDelete.getKey())){
     			throw new CDTException("Gitea organization doesnt exists");
     		}
-    		giteaClient.deleteOrg(projectToDelete.getKey());
+    		gitea.deleteOrg(projectToDelete.getKey());
     		jenkins.deleteFolder(projectToDelete.getKey());
+    		rocketChat.deletePrivateRoom(projectToDelete.getKey());
     		succeeded = true;			
         } catch (CDTException e) {
     		succeeded = false;
