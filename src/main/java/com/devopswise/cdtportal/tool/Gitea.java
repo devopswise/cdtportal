@@ -9,10 +9,12 @@ import io.gitea.ApiClient;
 import io.gitea.ApiException;
 import io.gitea.Configuration;
 import io.gitea.api.AdminApi;
+import io.gitea.api.MiscellaneousApi;
 import io.gitea.api.OrganizationApi;
 import io.gitea.auth.HttpBasicAuth;
 import io.gitea.model.CreateOrgOption;
 import io.gitea.model.Organization;
+import io.gitea.model.ServerVersion;
 
 @Service
 public class Gitea extends GitTool {
@@ -20,6 +22,7 @@ public class Gitea extends GitTool {
     private String baseUrl = null;
     private String username = null;
     private String password = null;
+    private String version = null;
     
     @Value("${gitea.debug}")
     private boolean debug = false;
@@ -33,7 +36,7 @@ public class Gitea extends GitTool {
 		this.password = password;
         ApiClient giteaClient = Configuration.getDefaultApiClient();
         giteaClient.setBasePath(this.baseUrl);
-        giteaClient.setDebugging(true);
+        giteaClient.setDebugging(debug);
         
         HttpBasicAuth giteaBasicAuth = (HttpBasicAuth) giteaClient.getAuthentication("BasicAuth");
         giteaBasicAuth.setUsername(this.username);
@@ -90,5 +93,23 @@ public class Gitea extends GitTool {
 
 	public void setDebug(boolean debug) {
 		this.debug = debug;
+	}
+
+	public String getVersion() {
+		ServerVersion result = null;
+		MiscellaneousApi apiInstance = new MiscellaneousApi();
+		try {
+		    result = apiInstance.getVersion();
+		    System.out.println(result);
+		} catch (ApiException e) {
+		    System.err.println("Exception when calling MiscellaneousApi#getVersion");
+		    e.printStackTrace();
+		}
+		version = result.getVersion();
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 }

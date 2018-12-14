@@ -11,8 +11,6 @@ import com.devopswise.cdtportal.api.CDTException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 
 @Service
@@ -28,6 +26,7 @@ public class RocketChat implements ChatToolIf {
     private String apiUserId = null;
     private String authToken = null;
     private boolean loggedIn = false;
+    private Client client = null;
 
 	public RocketChat(@Value("${rocketChat.baseUrl}")String baseUrl, 
 			@Value("${rocketChat.username}")String username, 
@@ -142,8 +141,10 @@ public class RocketChat implements ChatToolIf {
     private JSONObject doREST(String method, String context, String arg) throws AuthenticationException {
     	JSONObject responseJson = null;
 
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create(config);
+    	if (client == null){
+            client = Client.create();
+    	}
+    	
         if (this.debug){
             client.addFilter(new LoggingFilter(System.out));
         }
@@ -183,7 +184,7 @@ public class RocketChat implements ChatToolIf {
 
         String jsonResponse = response.getEntity(String.class);
         responseJson = new JSONObject(jsonResponse);
-
+        response.close();
         return responseJson;
     }
     
