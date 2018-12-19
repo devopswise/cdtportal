@@ -27,6 +27,9 @@ import javax.validation.Valid;
 
 @Controller
 public class ToolApiController implements ToolApi {
+	
+	private boolean debugEnabled;
+	
 	@Autowired
 	private Jenkins jenkins;
 

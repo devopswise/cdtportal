@@ -1,5 +1,7 @@
 package com.devopswise.cdtportal.tool;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import io.gitea.auth.HttpBasicAuth;
 import io.gitea.model.CreateOrgOption;
 import io.gitea.model.Organization;
 import io.gitea.model.ServerVersion;
+import io.swagger.Swagger2SpringBoot;
 
 @Service
 public class Gitea extends GitTool {
@@ -23,7 +26,8 @@ public class Gitea extends GitTool {
     private String username = null;
     private String password = null;
     private String version = null;
-    
+    private static Logger logger = null;
+
     @Value("${gitea.debug}")
     private boolean debug = false;
     
@@ -36,7 +40,11 @@ public class Gitea extends GitTool {
 		this.password = password;
         ApiClient giteaClient = Configuration.getDefaultApiClient();
         giteaClient.setBasePath(this.baseUrl);
-        giteaClient.setDebugging(debug);
+        
+		logger = LoggerFactory.getLogger(Gitea.class);
+        if (logger.isDebugEnabled() || debug) {
+            giteaClient.setDebugging(debug);        	
+        }
         
         HttpBasicAuth giteaBasicAuth = (HttpBasicAuth) giteaClient.getAuthentication("BasicAuth");
         giteaBasicAuth.setUsername(this.username);
@@ -100,9 +108,11 @@ public class Gitea extends GitTool {
 		MiscellaneousApi apiInstance = new MiscellaneousApi();
 		try {
 		    result = apiInstance.getVersion();
-		    System.out.println(result);
+		    //System.out.println(result);
+		    logger.debug(result.toString());
 		} catch (ApiException e) {
-		    System.err.println("Exception when calling MiscellaneousApi#getVersion");
+			logger.error("Exception when calling MiscellaneousApi#getVersion");
+		    //System.err.println("Exception when calling MiscellaneousApi#getVersion");
 		    e.printStackTrace();
 		}
 		version = result.getVersion();

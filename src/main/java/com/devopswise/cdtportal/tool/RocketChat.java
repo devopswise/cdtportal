@@ -4,7 +4,10 @@ import javax.naming.AuthenticationException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Service;
 
 import com.devopswise.cdtportal.api.CDTException;
@@ -13,6 +16,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 
+import io.swagger.Swagger2SpringBoot;
+
 @Service
 public class RocketChat implements ChatToolIf {
 
@@ -20,6 +25,8 @@ public class RocketChat implements ChatToolIf {
     private String username = null;
     private String password = null;
     private String version = null;
+    private static Logger logger = null;
+
     
     @Value("${rocketChat.debug}")
     private boolean debug;
@@ -27,6 +34,7 @@ public class RocketChat implements ChatToolIf {
     private String authToken = null;
     private boolean loggedIn = false;
     private Client client = null;
+    
 
 	public RocketChat(@Value("${rocketChat.baseUrl}")String baseUrl, 
 			@Value("${rocketChat.username}")String username, 
@@ -35,6 +43,9 @@ public class RocketChat implements ChatToolIf {
 		this.baseUrl=baseUrl;
 		this.username=username;
 		this.password=password;
+		
+		logger = LoggerFactory.getLogger(RocketChat.class);
+
         if (baseUrl.endsWith("/")) {
         	this.baseUrl = this.baseUrl.substring(0, this.baseUrl.length() - 1);
         } else {
@@ -145,9 +156,9 @@ public class RocketChat implements ChatToolIf {
             client = Client.create();
     	}
     	
-        if (this.debug){
-            client.addFilter(new LoggingFilter(System.out));
-        }
+    	if (logger.isDebugEnabled()){
+            client.addFilter(new LoggingFilter());    		
+    	}
 
         WebResource webResource;
         String url;
@@ -181,7 +192,9 @@ public class RocketChat implements ChatToolIf {
         if (response.getStatus() == 401) {
             throw new AuthenticationException("HTTP 401 received: Invalid Username or Password.");
         }
-
+        
+        logger.debug(response.toString());
+        
         String jsonResponse = response.getEntity(String.class);
         responseJson = new JSONObject(jsonResponse);
         response.close();
@@ -196,4 +209,5 @@ public class RocketChat implements ChatToolIf {
 	public void setDebug(boolean debug) {
 		this.debug = debug;
 	}
+	
 }

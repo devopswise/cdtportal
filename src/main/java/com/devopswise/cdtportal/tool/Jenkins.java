@@ -50,8 +50,9 @@ public class Jenkins implements CIToolIf {
 	@Override
 	public String getVersion() throws CDTException {
         try {
-            jenkinsVersion = jenkins.getVersion();
-			if (jenkinsVersion == null)
+        	jenkinsVersion = jenkins.getVersion();
+        	
+			if (jenkinsVersion == null || !jenkins.isRunning())
 				throw new CDTException("Unknown jenkins version");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
