@@ -2,6 +2,7 @@ package com.devopswise.cdtportal.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
@@ -48,6 +49,33 @@ public class GroupRepository implements BaseLdapNameAware {
                 new GroupContextMapper());
     }
 
+    public Group findOne(String name){
+        //not working
+    	Name dn = LdapNameBuilder.newInstance(baseLdapPath)
+        		.add("ou", "groups")
+                .add("cn", name)
+                .build();    	
+        return ldapTemplate.lookup(dn, new GroupContextMapper());
+    }
+    
+    public boolean groupExists(String groupName){
+    	//TODO implement findOne and use lookup
+    	Group result = null;
+    	/*
+    	try {
+    		result = findOne(groupName);
+    	}
+    	catch (NameNotFoundException e){
+    	}*/
+    	List<Group> groups = findAll();
+    	for(Group g:groups){
+    		if (g.getName().equalsIgnoreCase(groupName)){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     public void addMemberToGroup(String groupName, User p) {
         Name groupDn = buildGroupDn(groupName);
         Name personDn = buildPersonDn(p);

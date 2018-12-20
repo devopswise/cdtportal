@@ -1,10 +1,13 @@
 package com.devopswise.cdtportal.api;
 
 import com.devopswise.cdtportal.model.Project;
+import com.devopswise.cdtportal.model.User;
 import com.devopswise.cdtportal.project.ProjectService;
 import com.devopswise.cdtportal.tool.Gitea;
 import com.devopswise.cdtportal.tool.Jenkins;
 import com.devopswise.cdtportal.tool.RocketChat;
+import com.devopswise.cdtportal.user.GroupRepository;
+import com.devopswise.cdtportal.user.UserRepository;
 import com.offbytwo.jenkins.helper.JenkinsVersion;
 
 import io.gitea.ApiClient;
@@ -48,6 +51,12 @@ public class ProjectApiController implements ProjectApi {
 	private RocketChat rocketChat;
 	
 	@Autowired
+	private GroupRepository groupRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
 	private Gitea gitea;
 	
     public ResponseEntity<Object> addproject(@ApiParam(value = "Project description to create" ,required=true )  @Valid @RequestBody Project body) {
@@ -57,23 +66,48 @@ public class ProjectApiController implements ProjectApi {
         boolean succeeded = false;
     	
     	try {
+    		// First check if it is doable
+    		
+    	    //validate users on ldap
+    		//verify lead is also in the users, if not add him/her as well
+    	    List<String> projectMembers = body.getUsers();
+    	    if (! projectMembers.contains(body.getLead())){
+    	    	projectMembers.add(body.getLead());
+    	    }
+    	    
+    	    for(String username:projectMembers){
+        	    if (! userRepository.userExists(username)) {
+        			throw new CDTException("This user doesnot exists: "+ username);   			
+        	    }
+    	    }
+    		String groupName = "prj_"+body.getKey().toLowerCase()+"-all";
+    		if (groupRepository.groupExists(groupName)){
+    			throw new CDTException("This group already exists in directory: "+ groupName);   			
+    		}
+
     		if (gitea.projectExist(body.getKey())){
     			throw new CDTException("Gitea organization already exists");
     		}
-    		
-    	    Organization giteaOrg = gitea.createOrg(body.getKey(), body.getName(), body.getDescription());
-    	    
-    	    if (jenkins.projectExist(body.getKey())){
+
+    		if (jenkins.projectExist(body.getKey())){
     	    	throw new CDTException("Jenkins folder already exists");
     	    }
 
-    	    jenkins.createFolder(body.getKey());
-    	    
     	    if(rocketChat.projectExist(body.getKey())){
     	    	throw new CDTException("RocketChat private group already exists: "+body.getKey());
     	    }
-    	    rocketChat.createPrivateRoom(body.getKey());
+
+    	    for(String username:projectMembers){
+    	    	User u = userRepository.findOne(username);
+    	    	groupRepository.addMemberToGroup(groupName, u);
+    	    }
     	    
+    	    Organization giteaOrg = gitea.createOrg(body.getKey(), body.getName(), body.getDescription());
+    	        	    
+    	    jenkins.createFolder(body.getKey());
+    	    
+    	    rocketChat.createPrivateRoom(body.getKey());
+    	        	    
     		succeeded = true;		
     	} catch (CDTException e) {
     		

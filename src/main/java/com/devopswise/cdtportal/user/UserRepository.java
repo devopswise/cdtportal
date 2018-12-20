@@ -1,5 +1,7 @@
 package com.devopswise.cdtportal.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
@@ -11,7 +13,10 @@ import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Service;
 
+import com.devopswise.cdtportal.model.Group;
 import com.devopswise.cdtportal.model.User;
+
+import io.swagger.Swagger2SpringBoot;
 
 import javax.naming.Name;
 import javax.naming.directory.*;
@@ -22,6 +27,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 @Service
 public class UserRepository implements BaseLdapNameAware {
+    private static Logger log = LoggerFactory.getLogger(UserRepository.class);
 
     @Autowired
     private LdapTemplate ldapTemplate;
@@ -102,4 +108,23 @@ public class UserRepository implements BaseLdapNameAware {
             return user;
         }
     }
+
+
+	public boolean userExists(String username) {
+		User user = null;
+		/*
+		try {
+		    user = findOne(username);
+		} catch (Exception e){
+			log.debug("user not found: "+e.getMessage());
+		}
+		*/
+    	List<User> users = findAll();
+    	for(User u:users){
+    		if (u.getUid().equalsIgnoreCase(username)){
+    			return true;
+    		}
+    	}
+    	return false;
+	}
 }
