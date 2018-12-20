@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.7.RELEASE</version>
+        <version>1.5.7.RELEASE</version>
         <!-- use 2.0.7 -->
     </parent>
     <build>
@@ -101,7 +101,18 @@
     </dependency>
     <!-- end of jenkins -->
     <!-- ldap -->
-    
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-ldap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
+        </dependency>    
     <!-- end of ldap -->
     <!-- rocketChat -->
 <dependency>

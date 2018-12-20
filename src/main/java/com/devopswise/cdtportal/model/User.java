@@ -45,6 +45,9 @@ public class User   {
   @JsonProperty("userStatus")
   private Integer userStatus = null;
 
+  private String uid;
+  private String fullName;  
+  
   public User id(Long id) {
     this.id = id;
     return this;
@@ -236,6 +239,7 @@ public class User   {
     sb.append("class User {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    uid: ").append(toIndentedString(uid)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    firstName: ").append(toIndentedString(firstName)).append("\n");
     sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
@@ -257,5 +261,21 @@ public class User   {
     }
     return o.toString().replace("\n", "\n    ");
   }
+
+public String getUid() {
+	return uid;
+}
+
+public void setUid(String uid) {
+	this.uid = uid;
+}
+
+public String getFullName() {
+	return fullName;
+}
+
+public void setFullName(String fullName) {
+	this.fullName = fullName;
+}
 }
 

@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import javax.naming.Name;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,7 +32,7 @@ public class Group   {
   private String name = null;
 
   @JsonProperty("members")
-  private List<User> members = null;
+  private HashSet<Name> members = null;
 
   @JsonProperty("description")
   private String description = null;
@@ -75,19 +77,31 @@ public class Group   {
     this.name = name;
   }
 
-  public Group members(List<User> members) {
+  public Group members(HashSet<Name> members) {
     this.members = members;
     return this;
   }
 
-  public Group addMembersItem(User membersItem) {
+  public void addMember(Name member) {
+      if (this.members == null){
+          this.members = new HashSet<>();
+      }
+      members.add(member);
+  }
+
+  public void removeMember(Name member) {
+      members.remove(member);
+  }
+  
+  /*
+  public Group addMembersItem(Name membersItem) {
     if (this.members == null) {
-      this.members = new ArrayList<User>();
+      this.members = new ArrayList<Name>();
     }
     this.members.add(membersItem);
     return this;
   }
-
+  */
    /**
    * Get members
    * @return members
@@ -96,11 +110,11 @@ public class Group   {
 
   @Valid
 
-  public List<User> getMembers() {
+  public HashSet<Name> getMembers() {
     return members;
   }
 
-  public void setMembers(List<User> members) {
+  public void setMembers(HashSet<Name> members) {
     this.members = members;
   }
 
