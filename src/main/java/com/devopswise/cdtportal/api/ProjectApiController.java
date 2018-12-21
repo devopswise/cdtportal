@@ -1,5 +1,6 @@
 package com.devopswise.cdtportal.api;
 
+import com.devopswise.cdtportal.model.Group;
 import com.devopswise.cdtportal.model.Project;
 import com.devopswise.cdtportal.model.User;
 import com.devopswise.cdtportal.project.ProjectService;
@@ -10,13 +11,7 @@ import com.devopswise.cdtportal.user.GroupRepository;
 import com.devopswise.cdtportal.user.UserRepository;
 import com.offbytwo.jenkins.helper.JenkinsVersion;
 
-import io.gitea.ApiClient;
 import io.gitea.ApiException;
-import io.gitea.Configuration;
-import io.gitea.api.AdminApi;
-import io.gitea.api.OrganizationApi;
-import io.gitea.auth.HttpBasicAuth;
-import io.gitea.model.CreateOrgOption;
 import io.gitea.model.Organization;
 import io.swagger.annotations.*;
 
@@ -66,8 +61,6 @@ public class ProjectApiController implements ProjectApi {
         boolean succeeded = false;
     	
     	try {
-    		// First check if it is doable
-    		
     	    //validate users on ldap
     		//verify lead is also in the users, if not add him/her as well
     	    List<String> projectMembers = body.getUsers();
@@ -98,7 +91,7 @@ public class ProjectApiController implements ProjectApi {
     	    }
 
     	    for(String username:projectMembers){
-    	    	User u = userRepository.findOne(username);
+    	    	User u = userRepository.findByName(username).get(0);
     	    	groupRepository.addMemberToGroup(groupName, u);
     	    }
     	    
@@ -119,7 +112,8 @@ public class ProjectApiController implements ProjectApi {
 		} finally {
     		if (succeeded) {
             	project.setKey(body.getKey());
-            	project.setDescription(body.getDescription());    			
+            	project.setDescription(body.getDescription());
+            	project.setUsers(body.getUsers());
     		} else {
     		}
     	}
@@ -138,13 +132,18 @@ public class ProjectApiController implements ProjectApi {
     	Project projectToDelete = projectService.getProject(projectId);
         
     	boolean succeeded = false;
-        try {
+        try {    		
     		if (! gitea.projectExist(projectToDelete.getKey())){
     			throw new CDTException("Gitea organization doesnt exists");
     		}
     		gitea.deleteOrg(projectToDelete.getKey());
     		jenkins.deleteFolder(projectToDelete.getKey());
     		rocketChat.deletePrivateRoom(projectToDelete.getKey());
+    		
+    		String groupName = "prj_"+projectToDelete.getKey().toLowerCase()+"-all";
+    		Group g = groupRepository.findOne(groupName);
+    		groupRepository.delete(g);
+    		
     		succeeded = true;			
         } catch (CDTException e) {
     		succeeded = false;

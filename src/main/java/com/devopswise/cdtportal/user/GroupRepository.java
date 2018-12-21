@@ -51,10 +51,7 @@ public class GroupRepository implements BaseLdapNameAware {
 
     public Group findOne(String name){
         //not working
-    	Name dn = LdapNameBuilder.newInstance(baseLdapPath)
-        		.add("ou", "groups")
-                .add("cn", name)
-                .build();    	
+    	Name dn = buildGroupDn(name);   	
         return ldapTemplate.lookup(dn, new GroupContextMapper());
     }
     
