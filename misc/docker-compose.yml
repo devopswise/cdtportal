@@ -1,0 +1,19 @@
+version: '3'
+services:
+  theia:
+    image: "theiaide/theia-full:latest"
+    environment:
+      XGITHUB_TOKEN: "true"
+    ports:
+      - 3000
+    networks:
+      - cdt
+    restart: always
+    labels:
+      - traefik.backend=theia
+      - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN}
+      - traefik.port=3000
+
+networks:
+  cdt:
+    external: true
