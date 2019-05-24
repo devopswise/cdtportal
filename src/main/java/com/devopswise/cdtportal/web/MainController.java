@@ -53,8 +53,8 @@ public class MainController {
         //envs.remove("OTHERVAR");
         //envs.put("VAR2", env.get("VAR1") + "suffix");
 
-        //File workingFolder = new File("/home/user");
-        //pb.directory(workingFolder);
+        File workingFolder = new File("/opt/cdt/script");
+        pb.directory(workingFolder);
         
         //System.out.println(envs.get("Path"));
         envs.put("BASE_DOMAIN", baseDomain);
@@ -124,8 +124,8 @@ public class MainController {
 	        //envs.remove("OTHERVAR");
 	        //envs.put("VAR2", env.get("VAR1") + "suffix");
 
-	        //File workingFolder = new File("/home/user");
-	        //pb.directory(workingFolder);
+	        File workingFolder = new File("/opt/cdt/script");
+	        pb.directory(workingFolder);
 	        
 	        //System.out.println(envs.get("Path"));
 	        envs.put("BASE_DOMAIN", baseDomain);
