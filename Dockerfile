@@ -19,7 +19,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 RUN chmod +x /entrypoint.sh
 
 RUN mkdir /opt/cdt/script -p
-COPY ./mist/docker-compose.yml /opt/cdt/script/docker-compose.yml
+COPY ./misc/docker-compose.yml /opt/cdt/script/docker-compose.yml
 
 COPY ./misc/start-ws /usr/local/bin/start-ws
 RUN chmod +x /usr/local/bin/start-ws
