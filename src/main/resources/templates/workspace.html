@@ -12,13 +12,90 @@
 
 </head>
 <body>
+
 	<div class="container">
+<!-- 
+<form action="#" th:action="@{/processForm}" th:object="${foo}" method="post">
+  <input type="text" th:field="*{bar}" />
+  <input type="submit" />
+</form>
+	
+<form action="#" th:action="@{/workspace}" method="post">
+  <input type="text" />
+  <input type="submit" />
+</form>
+
+ -->
+
+
+<form class="form-horizontal" action="#" th:action="@{/workspace}" method="post">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Form Name</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="username">User</label>  
+  <div class="col-md-4">
+  <input id="owner" name="owner" type="text" placeholder="username" class="form-control input-md" required="" />
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="git_url">Git URL</label>  
+  <div class="col-md-6">
+  <input id="git_url" name="git_url" type="text" placeholder="https://github.com/devopswise/cdtportal.git" class="form-control input-md" required="" />
+    
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="start_workspace"></label>
+  <div class="col-md-4">
+    <button id="start_workspace" name="start_workspace" class="btn btn-primary">Start Workspace</button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+
+
 		<div class="starter-template">
 			<h2>
 				<span th:text="${message}"></span>
 			</h2>
 		</div>
+		<!-- 
+    <p th:each="workspace : ${workspaces}"
+       th:text="${workspace.name}">A Smoke Test</p>
+         -->
 	</div>
+
+  <table class="table table-responsive">
+        <th>
+            <td>Name</td>
+            <td>Owner</td>
+            <td>Git Url</td>
+            <td>Delete</td>
+        </th>
+        <tr th:each="workspace : ${workspaces}">
+            <td th:text="${workspace.name}"/>
+            <td th:text="${workspace.owner}"/>
+            <td th:text="${workspace.git_url}" placeholder="https://gitea.cdt.devopswise.co.uk/CDT/cdtportal.git" />
+            <td >
+              <form th:action="@{deleteWorkspace}" method="post">
+                  <input type="hidden" name="id" th:value="${workspace.id}" />
+                  <input type="submit" value="Delete" class="btn btn-danger" />
+              </form>
+            </td>
+        </tr>
+    </table>
+
 
 	<script type="text/javascript"
 		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
