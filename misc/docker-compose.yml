@@ -11,7 +11,7 @@ services:
     restart: always
     labels:
       - traefik.backend=theia
-      - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN}
+      - traefik.frontend.rule=Host:theia-${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN}
       - traefik.docker.network=cdt
       - traefik.port=3000
 
