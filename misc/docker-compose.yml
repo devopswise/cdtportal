@@ -4,6 +4,7 @@ services:
     image: "theiaide/theia-full:latest"
     volumes:
       - "/opt/cdt-data/theia/${USERNAME}/.ssh:/home/theia/.ssh"
+      - "/opt/cdt-data/theia/${USERNAME}/maven-local-repo:/home/theia/.m2/repository"
       - "/opt/cdt-cert/cacerts:/etc/ssl/certs/java/cacerts:ro"
     environment:
       GIT_URL: ${GIT_URL}
