@@ -11,6 +11,8 @@ GIT_URL=$2
 workspace_name=$(echo -n ${USERNAME}_${GIT_URL} | md5sum | awk '{print $1}' | cut -c1-8 )
 
 export COMPOSE_PROJECT_NAME=${workspace_name}
+export USERNAME
+export GIT_URL
 
 if [ "$3" = "up" ]; then
   docker-compose up -d

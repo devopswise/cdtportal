@@ -2,8 +2,11 @@ version: '3'
 services:
   theia:
     image: "theiaide/theia-full:latest"
+    volumes:
+      - "/opt/cdt-data/theia/${USERNAME}/.ssh:/home/theia/.ssh"
+      - "/opt/cdt-cert/cacerts:/etc/ssl/certs/java/cacerts:ro"
     environment:
-      XGITHUB_TOKEN: "true"
+      GIT_URL: ${GIT_URL}
     ports:
       - 3000
     networks:
