@@ -19,11 +19,11 @@ node('jenkins-jnlp-slave-docker-cli') {
           sh 'mvn package -q'
         }
     }
-    
+
     //stage('debug'){
     //    sh 'sleep infinity'
     //}
-    
+
     stage('Build image') {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
@@ -36,7 +36,7 @@ node('jenkins-jnlp-slave-docker-cli') {
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
         docker.withRegistry('https://index.docker.io/v1/', 'devopswise-dockerhub') {
-            app.push("0.8.${env.BUILD_NUMBER}")
+            app.push("0.9.${env.BUILD_NUMBER}")
             app.push("latest")
         }
     }
