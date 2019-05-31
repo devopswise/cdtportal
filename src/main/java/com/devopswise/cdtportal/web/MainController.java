@@ -22,21 +22,21 @@ import com.devopswise.cdtportal.model.Workspace;
 public class MainController {
 
 	List<Workspace> workspaces = new ArrayList<>();
-	
+
 	@Value("${cdt.baseDomain}")
 	private String baseDomain;
-	
+
 	@RequestMapping("/")
 	public String landingPage(Map<String, Object> model) {
 		model.put("baseDomain", baseDomain);
-		
-		// Return the landing page
-		return "landing";
+
+		// Return the index page
+		return "index";
 	}
-	
+
 	@RequestMapping(value = "/workspace", method=RequestMethod.GET)
 	public String showForm(Model model) {
-	  model.addAttribute("workspaces", workspaces);	  
+	  model.addAttribute("workspaces", workspaces);
       return "workspace";
 	}
 
@@ -44,27 +44,27 @@ public class MainController {
 	public String workspaceCreate(Map<String, Object> model, @RequestParam String owner, @RequestParam String git_url) {
 		System.out.println("owner :"+ owner);
 		System.out.println("git_url :" + git_url );
-		String workspaceName = null; 
+		String workspaceName = null;
         //ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", "E:/home/onur/workspace/cdtportal/misc/start-ws.bat", owner, git_url, "up");
         ProcessBuilder pb = new ProcessBuilder("start-ws", owner, git_url, "up");
         Map<String, String> envs = pb.environment();
-        
+
         //envs.put("VAR1", "myValue");
         //envs.remove("OTHERVAR");
         //envs.put("VAR2", env.get("VAR1") + "suffix");
 
         File workingFolder = new File("/opt/cdt/script");
         pb.directory(workingFolder);
-        
+
         //System.out.println(envs.get("Path"));
         envs.put("BASE_DOMAIN", baseDomain);
         pb.redirectErrorStream();
         try {
         	Process proc = pb.start();
-            BufferedReader stdInput = new BufferedReader(new 
+            BufferedReader stdInput = new BufferedReader(new
            	     InputStreamReader(proc.getInputStream()));
 
-            BufferedReader stdError = new BufferedReader(new 
+            BufferedReader stdError = new BufferedReader(new
            	     InputStreamReader(proc.getErrorStream()));
 
              // read the output from the command
@@ -74,20 +74,20 @@ public class MainController {
                  System.out.println(s);
                  workspaceName = new String(s);
              }
-             
+
              System.out.println("workspaceName= " + workspaceName);
              //workspaceName = s;
              // read any errors from the attempted command
              System.out.println("Here is the standard error of the command (if any):\n");
              while ((s = stdError.readLine()) != null) {
                System.out.println(s);
-             }    
-           
+             }
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
+
         System.out.println("workspaceName: " + workspaceName);
 
 		Workspace workspace = new Workspace();
@@ -109,33 +109,33 @@ public class MainController {
 		    	break;
 		    }
 		}
-	    
+
 	    System.out.println("deleting: " + workspaceToDelete.getId()+ workspaceToDelete.getName());
-	   
-	       //ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", 
-	    	//	   "E:/home/onur/workspace/cdtportal/misc/start-ws.bat", 
+
+	       //ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C",
+	    	//	   "E:/home/onur/workspace/cdtportal/misc/start-ws.bat",
 	    	//	   workspaceToDelete.getOwner(),  workspaceToDelete.getGit_url(), "down");
-	        ProcessBuilder pb = new ProcessBuilder("start-ws", 
-	    		   workspaceToDelete.getOwner(),  
+	        ProcessBuilder pb = new ProcessBuilder("start-ws",
+	    		   workspaceToDelete.getOwner(),
 	    		   workspaceToDelete.getGit_url(), "down");
 	        Map<String, String> envs = pb.environment();
-	        
+
 	        //envs.put("VAR1", "myValue");
 	        //envs.remove("OTHERVAR");
 	        //envs.put("VAR2", env.get("VAR1") + "suffix");
 
 	        File workingFolder = new File("/opt/cdt/script");
 	        pb.directory(workingFolder);
-	        
+
 	        //System.out.println(envs.get("Path"));
 	        envs.put("BASE_DOMAIN", baseDomain);
 	        pb.redirectErrorStream();
 	        try {
 	        	Process proc = pb.start();
-	            BufferedReader stdInput = new BufferedReader(new 
+	            BufferedReader stdInput = new BufferedReader(new
 	           	     InputStreamReader(proc.getInputStream()));
 
-	            BufferedReader stdError = new BufferedReader(new 
+	            BufferedReader stdError = new BufferedReader(new
 	           	     InputStreamReader(proc.getErrorStream()));
 
 	             // read the output from the command
@@ -144,14 +144,14 @@ public class MainController {
 	             while ((s = stdInput.readLine()) != null) {
 	                 System.out.println(s);
 	             }
-	             
+
 	             //System.out.println("workspaceName= " + workspaceName);
 	             //workspaceName = s;
 	             // read any errors from the attempted command
 	             System.out.println("Here is the standard error of the command (if any):\n");
 	             while ((s = stdError.readLine()) != null) {
 	               System.out.println(s);
-	             }    
+	             }
 	             int returnCode = proc.waitFor();
 	             System.out.println("returnCode: " + returnCode);
 	             if (returnCode == 0) {
@@ -160,7 +160,7 @@ public class MainController {
 			} catch (IOException | InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}	    
+			}
 		return "redirect:workspace";
-	}	
+	}
 }
