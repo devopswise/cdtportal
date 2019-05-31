@@ -32,7 +32,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#"></a>
+          <a class="navbar-brand" href="/">Dashboard</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <!--
@@ -55,9 +55,10 @@
 <form class="form-horizontal" action="#" th:action="@{/workspace}" method="post">
 <fieldset>
 
-<!-- Form Name -->
-<legend>Form Name</legend>
+<br/>
+<p class="text-center">Enter your username and git url of project then click Start Workspace</p>
 
+<br/>
 <!-- Text input-->
 <div class="form-group">
   <label class="col-md-4 control-label" for="username">User</label>
@@ -71,7 +72,8 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="git_url">Git URL</label>
   <div class="col-md-6">
-  <input id="git_url" name="git_url" type="text" placeholder="https://github.com/devopswise/cdtportal.git" class="form-control input-md" required="" />
+  <input id="git_url" name="git_url" type="text" placeholder="https://github.com/devopswise/cdtportal.git"
+   class="form-control input-md" required="" />
 
   </div>
 </div>
@@ -87,41 +89,40 @@
 </fieldset>
 </form>
 
-
-
 		<div class="starter-template">
 			<h2>
 				<span th:text="${message}"></span>
 			</h2>
 		</div>
-
 	</div>
+	<div class="container">
 
-  <table class="table table-responsive">
-        <th>
-            <td>Name</td>
-            <td>Owner</td>
-            <td>Git Url</td>
-            <td>Delete</td>
-        </th>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Owner</th>
+      <th scope="col">Git Url</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
         <tr th:each="workspace : ${workspaces}">
-            <td th:text="${workspace.name}"/>
+            <td><a th:href="'https://theia-'+${workspace.name}+'.'+${workspace.name}"
+                               th:text="'theia-'+${workspace.name}" target="_blank"/></td>
             <td th:text="${workspace.owner}"/>
-            <td th:text="${workspace.git_url}" placeholder="https://gitea.cdt.devopswise.co.uk/CDT/cdtportal.git" />
-            <td >
+            <td><a th:href="${workspace.git_url}" th:text="${workspace.git_url}" target="_blank"/></td>
+            <td>
               <form th:action="@{deleteWorkspace}" method="post">
                   <input type="hidden" name="id" th:value="${workspace.id}" />
                   <input type="submit" value="Delete" class="btn btn-danger" />
               </form>
             </td>
         </tr>
-    </table>
+  </tbody>
+</table>
+</div>
 
-      <hr/>
-
-      <footer>
-        <p>&copy; devopswise 2018</p>
-      </footer>
     <!-- /container -->        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <!-- <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script> -->
 

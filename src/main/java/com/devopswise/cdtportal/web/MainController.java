@@ -37,6 +37,7 @@ public class MainController {
 	@RequestMapping(value = "/workspace", method=RequestMethod.GET)
 	public String showForm(Model model) {
 	  model.addAttribute("workspaces", workspaces);
+      model.addAttribute("baseDomain", baseDomain);
       return "workspace";
 	}
 
