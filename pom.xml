@@ -4,7 +4,7 @@
     <artifactId>cdtportal</artifactId>
     <packaging>jar</packaging>
     <name>cdtportal</name>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <properties>
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -21,7 +21,7 @@
         <url>https://gitea.cdt.devopswise.co.uk/cdt/cdtportal</url>
         <connection>scm:git:ssh://git@gitea.cdt.devopswise.co.uk:2222/cdt/cdtportal.git</connection>
         <developerConnection>scm:git:ssh://git@gitea.cdt.devopswise.co.uk:2222/cdt/cdtportal.git</developerConnection>
-        <tag>cdtportal-0.0.1</tag>
+        <tag>HEAD</tag>
     </scm>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
