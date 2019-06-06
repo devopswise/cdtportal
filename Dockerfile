@@ -24,7 +24,7 @@ RUN mkdir /opt/cdt/script -p
 
 COPY ./misc/image/start-ws /opt/cdt/script/start-ws
 COPY ./misc/image/docker-compose.yml.template /opt/cdt/script/docker-compose.yml.template
-COPY ./misc/image/keyclaok-gatekeeper.conf.template /opt/cdt/script/keycloak-gatekeeper.conf.template
+COPY ./misc/image/keycloak-gatekeeper.conf.template /opt/cdt/script/keycloak-gatekeeper.conf.template
 
 #RUN chmod +x /opt/cdt/script/start-ws
 ENV PATH="/opt/cdt/script:${PATH}"
