@@ -25,8 +25,21 @@ h1 {
 /* Applies to the element with <... id="someid"> specified. */
 /* #someid { color: green; } */
 
+body {
+    padding-top: 50px;
+}
 
+.text-center h1 {
+    font-size: 68px;
+}
 
+.text-center span.glyphicon {
+    font-size: 20em;
+}
+
+.search-line {
+    position: relative;
+}
 
 
 

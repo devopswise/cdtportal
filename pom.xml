@@ -23,6 +23,15 @@
         <developerConnection>scm:git:ssh://git@gitea.cdt.devopswise.co.uk:2222/cdt/cdtportal.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.keycloak.bom</groupId>
+                <artifactId>keycloak-adapter-bom</artifactId>
+                <version>4.8.0.Final</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
@@ -49,6 +58,24 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- keycloak -->
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-legacy-spring-boot-starter</artifactId>
+            <version>4.8.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- end of keycloak -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -58,12 +85,6 @@
  		   <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.apache.derby</groupId>
-			<artifactId>derby</artifactId>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -94,22 +115,22 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>
-    <!-- Bean Validation API support -->
-    <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-    </dependency>
-    <!-- gitea -->
-    	<dependency>
-			<groupId>com.github.zeripath</groupId>
-			<artifactId>java-gitea-api</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-		    <groupId>com.squareup.okhttp</groupId>
-    		<artifactId>okhttp</artifactId>
-    		<version>2.7.5</version>
-		</dependency>
+        <!-- Bean Validation API support -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <!-- gitea -->
+        <dependency>
+            <groupId>com.github.zeripath</groupId>
+            <artifactId>java-gitea-api</artifactId>
+            <version>1.7.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>2.7.5</version>
+        </dependency>
         <dependency>
             <groupId>org.threeten</groupId>
             <artifactId>threetenbp</artifactId>
@@ -120,15 +141,15 @@
             <artifactId>gson-fire</artifactId>
             <version>1.7.1</version>
         </dependency>
-	<!-- end of gitea -->
-    <!-- jenkins -->
-    <dependency>
-        <groupId>com.offbytwo.jenkins</groupId>
-        <artifactId>jenkins-client</artifactId>
-        <version>0.3.8</version>
-    </dependency>
-    <!-- end of jenkins -->
-    <!-- ldap -->
+        <!-- end of gitea -->
+        <!-- jenkins -->
+        <dependency>
+            <groupId>com.offbytwo.jenkins</groupId>
+            <artifactId>jenkins-client</artifactId>
+            <version>0.3.8</version>
+        </dependency>
+        <!-- end of jenkins -->
+        <!-- ldap -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -141,22 +162,21 @@
             <groupId>com.unboundid</groupId>
             <artifactId>unboundid-ldapsdk</artifactId>
         </dependency>
-    <!-- end of ldap -->
-    <!-- rocketChat -->
-<dependency>
-    <groupId>com.sun.jersey</groupId>
-    <artifactId>jersey-bundle</artifactId>
-    <version>1.19.1</version>
-</dependency>
-	<dependency>
-		<groupId>org.json</groupId>
-	    <artifactId>json</artifactId>
-	</dependency>
-<dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
-</dependency>
-    <!-- end of RocketChat -->
-
+        <!-- end of ldap -->
+        <!-- rocketChat -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-bundle</artifactId>
+            <version>1.19.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <!-- end of RocketChat -->
     </dependencies>
 </project>
