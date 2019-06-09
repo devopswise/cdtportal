@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.devopswise.cdtportal.model.Workspace;
+import com.devopswise.cdtportal.workspace.WorkspaceRepository;
 
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.representations.AccessToken;
@@ -55,7 +56,10 @@ public class MainController {
     //@Autowired
     //private AccessToken accessToken;
 
-	List<Workspace> workspaces = new ArrayList<>();
+	//List<Workspace> workspaces = new ArrayList<>();
+
+    @Autowired
+    private WorkspaceRepository workspaceRepository;
 
 	@Value("${cdt.baseDomain}")
 	private String baseDomain;
@@ -104,7 +108,8 @@ public class MainController {
 
 	@RequestMapping(value = "/workspace", method=RequestMethod.GET)
 	public String showForm(Model model) {
-	  model.addAttribute("workspaces", workspaces);
+
+	  model.addAttribute("workspaces", workspaceRepository.findAll());
       model.addAttribute("baseDomain", baseDomain);
       return "workspace";
 	}
@@ -183,32 +188,43 @@ public class MainController {
 
 		Workspace workspace = new Workspace();
 		workspace.setName(workspaceName);
-		workspace.setId(new Long(workspaces.size()));
+		//workspace.setId(new Long(workspaces.size()));
 		workspace.setOwner(owner);
-		workspace.setGit_url(git_url);
-		workspaces.add(workspace);
+		workspace.setGitUrl(git_url);;
+		//workspaces.add(workspace);
+
+        workspaceRepository.save(workspace);
 		return "redirect:workspace";
 	}
 
 	@RequestMapping(value = "/deleteWorkspace", method=RequestMethod.POST)
 	public String workspaceDelete(@RequestParam Long id) {
 	    System.out.println("Student_Id : "+id);
-	    Workspace workspaceToDelete = null;
+	    //Workspace workspaceToDelete = null;
+        /*
 	    for (Workspace workspace : workspaces) {
 		    if (workspace.getId().equals(id)){
 		    	workspaceToDelete = workspace;
 		    	break;
 		    }
 		}
+        */
+        Workspace workspaceToDelete = workspaceRepository.findOne(id);
+
+        //workspaceRepository.deleteAll();
 
 	    System.out.println("deleting: " + workspaceToDelete.getId()+ workspaceToDelete.getName());
 
 	       //ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C",
 	    	//	   "E:/home/onur/workspace/cdtportal/misc/start-ws.bat",
 	    	//	   workspaceToDelete.getOwner(),  workspaceToDelete.getGit_url(), "down");
+    	    ProcessBuilder pb = new ProcessBuilder("start-ws",
+	    		   workspaceToDelete.getOwner(),
+	    		   workspaceToDelete.getGitUrl(), "down");
+                   /*
 	        ProcessBuilder pb = new ProcessBuilder("start-ws",
 	    		   workspaceToDelete.getOwner(),
-	    		   workspaceToDelete.getGit_url(), "down");
+	    		   workspaceToDelete.getGit_url(), "down");*/
 	        Map<String, String> envs = pb.environment();
 
 	        //envs.put("VAR1", "myValue");
@@ -246,7 +262,8 @@ public class MainController {
 	             int returnCode = proc.waitFor();
 	             System.out.println("returnCode: " + returnCode);
 	             if (returnCode == 0) {
-	            	 workspaces.remove(workspaceToDelete);
+                     workspaceRepository.delete(workspaceToDelete);
+	            	 //workspaces.remove(workspaceToDelete);
 	             }
 			} catch (IOException | InterruptedException e) {
 				// TODO Auto-generated catch block

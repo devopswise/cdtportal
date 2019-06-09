@@ -111,7 +111,7 @@
             <td><a th:href="'https://theia-'+${workspace.name}+'.'+${workspace.name}"
                                th:text="'theia-'+${workspace.name}" target="_blank"/></td>
             <td th:text="${workspace.owner}"/>
-            <td><a th:href="${workspace.git_url}" th:text="${workspace.git_url}" target="_blank"/></td>
+            <td><a th:href="${workspace.gitUrl}" th:text="${workspace.gitUrl}" target="_blank"/></td>
             <td>
               <form th:action="@{deleteWorkspace}" method="post">
                   <input type="hidden" name="id" th:value="${workspace.id}" />
