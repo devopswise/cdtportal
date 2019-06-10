@@ -72,7 +72,7 @@ paths:
       security:
         - api_key: []
         - cdtportal_auth: []
-        
+
   /project/findByStatus:
     get:
       tags:
@@ -108,7 +108,7 @@ paths:
       security:
         - api_key: []
         - cdtportal_auth: []
-        
+
   /project/findByTags:
     get:
       tags:
@@ -277,7 +277,7 @@ paths:
       security:
         - api_key: []
         - cdtportal_auth: []
-        
+
   /workspace/findByStatus:
     get:
       tags:
@@ -313,7 +313,63 @@ paths:
       security:
         - api_key: []
         - cdtportal_auth: []
-        
+
+  /workspace/findByOwner:
+    get:
+      tags:
+        - workspace
+      summary: Finds workspaces by its owner
+      description: List workspaces of given user
+      operationId: findWorkspacesByOwner
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: query
+          description: username of workspace owner
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Workspace'
+        '400':
+          description: Invalid status value
+      security:
+        - api_key: []
+        - cdtportal_auth: []
+
+  /workspace/findByName:
+    get:
+      tags:
+        - workspace
+      summary: Finds workspaces by its name
+      description: List workspaces meeting criteria
+      operationId: findWorkspacesByName
+      produces:
+        - application/json
+      parameters:
+        - name: workspaceName
+          in: query
+          description: name of the workspace
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Workspace'
+        '400':
+          description: Invalid status value
+      security:
+        - api_key: []
+        - cdtportal_auth: []
+
   /workspace/{workspaceId}:
     get:
       tags:

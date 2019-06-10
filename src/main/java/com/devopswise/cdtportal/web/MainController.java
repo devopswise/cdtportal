@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.devopswise.cdtportal.model.Workspace;
 import com.devopswise.cdtportal.workspace.WorkspaceRepository;
+import com.devopswise.cdtportal.workspace.WorkspaceService;
 
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.representations.AccessToken;
@@ -48,6 +49,9 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class MainController {
     private static Logger log = LoggerFactory.getLogger(MainController.class);
+
+	@Autowired
+	private WorkspaceService workspaceService;
 
     @Autowired
     private CustomerDAO customerRepository;
@@ -138,137 +142,13 @@ public class MainController {
 
 	@RequestMapping(value = "/workspace", method=RequestMethod.POST)
 	public String workspaceCreate(Map<String, Object> model, @RequestParam String owner, @RequestParam String git_url) {
-		System.out.println("owner :"+ owner);
-		System.out.println("git_url :" + git_url );
-		String workspaceName = null;
-        //ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C", "E:/home/onur/workspace/cdtportal/misc/start-ws.bat", owner, git_url, "up");
-        ProcessBuilder pb = new ProcessBuilder("start-ws", owner, git_url, "up");
-        Map<String, String> envs = pb.environment();
-
-        //envs.put("VAR1", "myValue");
-        //envs.remove("OTHERVAR");
-        //envs.put("VAR2", env.get("VAR1") + "suffix");
-
-        File workingFolder = new File("/opt/cdt/script");
-        pb.directory(workingFolder);
-
-        //System.out.println(envs.get("Path"));
-        envs.put("BASE_DOMAIN", baseDomain);
-        pb.redirectErrorStream();
-        try {
-        	Process proc = pb.start();
-            BufferedReader stdInput = new BufferedReader(new
-           	     InputStreamReader(proc.getInputStream()));
-
-            BufferedReader stdError = new BufferedReader(new
-           	     InputStreamReader(proc.getErrorStream()));
-
-             // read the output from the command
-             //System.out.println("Here is the standard output of the command:\n");
-             String s = null;
-             while ((s = stdInput.readLine()) != null) {
-                 System.out.println(s);
-                 workspaceName = new String(s);
-             }
-
-             System.out.println("workspaceName= " + workspaceName);
-             //workspaceName = s;
-             // read any errors from the attempted command
-             System.out.println("Here is the standard error of the command (if any):\n");
-             while ((s = stdError.readLine()) != null) {
-               System.out.println(s);
-             }
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-        System.out.println("workspaceName: " + workspaceName);
-
-		Workspace workspace = new Workspace();
-		workspace.setName(workspaceName);
-		//workspace.setId(new Long(workspaces.size()));
-		workspace.setOwner(owner);
-		workspace.setGitUrl(git_url);;
-		//workspaces.add(workspace);
-
-        workspaceRepository.save(workspace);
+        workspaceService.createWorkspace(owner, git_url);
 		return "redirect:workspace";
 	}
 
 	@RequestMapping(value = "/deleteWorkspace", method=RequestMethod.POST)
 	public String workspaceDelete(@RequestParam Long id) {
-	    System.out.println("Student_Id : "+id);
-	    //Workspace workspaceToDelete = null;
-        /*
-	    for (Workspace workspace : workspaces) {
-		    if (workspace.getId().equals(id)){
-		    	workspaceToDelete = workspace;
-		    	break;
-		    }
-		}
-        */
-        Workspace workspaceToDelete = workspaceRepository.findOne(id);
-
-        //workspaceRepository.deleteAll();
-
-	    System.out.println("deleting: " + workspaceToDelete.getId()+ workspaceToDelete.getName());
-
-	       //ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/C",
-	    	//	   "E:/home/onur/workspace/cdtportal/misc/start-ws.bat",
-	    	//	   workspaceToDelete.getOwner(),  workspaceToDelete.getGit_url(), "down");
-    	    ProcessBuilder pb = new ProcessBuilder("start-ws",
-	    		   workspaceToDelete.getOwner(),
-	    		   workspaceToDelete.getGitUrl(), "down");
-                   /*
-	        ProcessBuilder pb = new ProcessBuilder("start-ws",
-	    		   workspaceToDelete.getOwner(),
-	    		   workspaceToDelete.getGit_url(), "down");*/
-	        Map<String, String> envs = pb.environment();
-
-	        //envs.put("VAR1", "myValue");
-	        //envs.remove("OTHERVAR");
-	        //envs.put("VAR2", env.get("VAR1") + "suffix");
-
-	        File workingFolder = new File("/opt/cdt/script");
-	        pb.directory(workingFolder);
-
-	        //System.out.println(envs.get("Path"));
-	        envs.put("BASE_DOMAIN", baseDomain);
-	        pb.redirectErrorStream();
-	        try {
-	        	Process proc = pb.start();
-	            BufferedReader stdInput = new BufferedReader(new
-	           	     InputStreamReader(proc.getInputStream()));
-
-	            BufferedReader stdError = new BufferedReader(new
-	           	     InputStreamReader(proc.getErrorStream()));
-
-	             // read the output from the command
-	             System.out.println("Here is the standard output of the command:\n");
-	             String s = null;
-	             while ((s = stdInput.readLine()) != null) {
-	                 System.out.println(s);
-	             }
-
-	             //System.out.println("workspaceName= " + workspaceName);
-	             //workspaceName = s;
-	             // read any errors from the attempted command
-	             System.out.println("Here is the standard error of the command (if any):\n");
-	             while ((s = stdError.readLine()) != null) {
-	               System.out.println(s);
-	             }
-	             int returnCode = proc.waitFor();
-	             System.out.println("returnCode: " + returnCode);
-	             if (returnCode == 0) {
-                     workspaceRepository.delete(workspaceToDelete);
-	            	 //workspaces.remove(workspaceToDelete);
-	             }
-			} catch (IOException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        workspaceService.deleteWorkspace(id);
 		return "redirect:workspace";
 	}
 }

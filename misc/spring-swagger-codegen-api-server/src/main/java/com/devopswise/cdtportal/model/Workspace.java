@@ -12,26 +12,23 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * A cross-cutting project for all tools
+ * A workspace based on Theia ide
  */
-@ApiModel(description = "A cross-cutting project for all tools")
+@ApiModel(description = "A workspace based on Theia ide")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-06-10T16:50:20.069Z")
 
-public class Project   {
+public class Workspace   {
   @JsonProperty("id")
   private Long id = null;
 
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("key")
-  private String key = null;
+  @JsonProperty("owner")
+  private String owner = null;
 
-  @JsonProperty("users")
-  private List<String> users = null;
-
-  @JsonProperty("lead")
-  private String lead = null;
+  @JsonProperty("git_url")
+  private String gitUrl = null;
 
   @JsonProperty("tags")
   private List<Tag> tags = null;
@@ -39,7 +36,7 @@ public class Project   {
   @JsonProperty("description")
   private String description = null;
 
-  public Project id(Long id) {
+  public Workspace id(Long id) {
     this.id = id;
     return this;
   }
@@ -59,7 +56,7 @@ public class Project   {
     this.id = id;
   }
 
-  public Project name(String name) {
+  public Workspace name(String name) {
     this.name = name;
     return this;
   }
@@ -80,81 +77,52 @@ public class Project   {
     this.name = name;
   }
 
-  public Project key(String key) {
-    this.key = key;
+  public Workspace owner(String owner) {
+    this.owner = owner;
     return this;
   }
 
    /**
-   * Get key
-   * @return key
-  **/
-  @ApiModelProperty(example = "HELLO", required = true, value = "")
-  @NotNull
-
-
-  public String getKey() {
-    return key;
-  }
-
-  public void setKey(String key) {
-    this.key = key;
-  }
-
-  public Project users(List<String> users) {
-    this.users = users;
-    return this;
-  }
-
-  public Project addUsersItem(String usersItem) {
-    if (this.users == null) {
-      this.users = new ArrayList<String>();
-    }
-    this.users.add(usersItem);
-    return this;
-  }
-
-   /**
-   * Get users
-   * @return users
+   * Get owner
+   * @return owner
   **/
   @ApiModelProperty(value = "")
 
 
-  public List<String> getUsers() {
-    return users;
+  public String getOwner() {
+    return owner;
   }
 
-  public void setUsers(List<String> users) {
-    this.users = users;
+  public void setOwner(String owner) {
+    this.owner = owner;
   }
 
-  public Project lead(String lead) {
-    this.lead = lead;
+  public Workspace gitUrl(String gitUrl) {
+    this.gitUrl = gitUrl;
     return this;
   }
 
    /**
-   * Get lead
-   * @return lead
+   * Get gitUrl
+   * @return gitUrl
   **/
-  @ApiModelProperty(example = "alice.developer", value = "")
+  @ApiModelProperty(example = "git://hrweb@gitea", value = "")
 
 
-  public String getLead() {
-    return lead;
+  public String getGitUrl() {
+    return gitUrl;
   }
 
-  public void setLead(String lead) {
-    this.lead = lead;
+  public void setGitUrl(String gitUrl) {
+    this.gitUrl = gitUrl;
   }
 
-  public Project tags(List<Tag> tags) {
+  public Workspace tags(List<Tag> tags) {
     this.tags = tags;
     return this;
   }
 
-  public Project addTagsItem(Tag tagsItem) {
+  public Workspace addTagsItem(Tag tagsItem) {
     if (this.tags == null) {
       this.tags = new ArrayList<Tag>();
     }
@@ -178,7 +146,7 @@ public class Project   {
     this.tags = tags;
   }
 
-  public Project description(String description) {
+  public Workspace description(String description) {
     this.description = description;
     return this;
   }
@@ -207,31 +175,29 @@ public class Project   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Project project = (Project) o;
-    return Objects.equals(this.id, project.id) &&
-        Objects.equals(this.name, project.name) &&
-        Objects.equals(this.key, project.key) &&
-        Objects.equals(this.users, project.users) &&
-        Objects.equals(this.lead, project.lead) &&
-        Objects.equals(this.tags, project.tags) &&
-        Objects.equals(this.description, project.description);
+    Workspace workspace = (Workspace) o;
+    return Objects.equals(this.id, workspace.id) &&
+        Objects.equals(this.name, workspace.name) &&
+        Objects.equals(this.owner, workspace.owner) &&
+        Objects.equals(this.gitUrl, workspace.gitUrl) &&
+        Objects.equals(this.tags, workspace.tags) &&
+        Objects.equals(this.description, workspace.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, key, users, lead, tags, description);
+    return Objects.hash(id, name, owner, gitUrl, tags, description);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Project {\n");
+    sb.append("class Workspace {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    key: ").append(toIndentedString(key)).append("\n");
-    sb.append("    users: ").append(toIndentedString(users)).append("\n");
-    sb.append("    lead: ").append(toIndentedString(lead)).append("\n");
+    sb.append("    owner: ").append(toIndentedString(owner)).append("\n");
+    sb.append("    gitUrl: ").append(toIndentedString(gitUrl)).append("\n");
     sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("}");

@@ -2,7 +2,7 @@ package com.devopswise.cdtportal.api;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-12-12T17:43:26.471Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-06-10T16:50:20.069Z")
 
 @javax.xml.bind.annotation.XmlRootElement
 public class ApiResponseMessage {
