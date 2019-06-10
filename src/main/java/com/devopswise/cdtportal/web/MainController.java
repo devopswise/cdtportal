@@ -54,11 +54,10 @@ public class MainController {
 	private WorkspaceService workspaceService;
 
     @Autowired
-    private CustomerDAO customerRepository;
-    //@Autowired
-    //private KeycloakSecurityContext securityContext;
-    //@Autowired
-    //private AccessToken accessToken;
+    private KeycloakSecurityContext securityContext;
+
+    @Autowired
+    private AccessToken accessToken;
 
 	//List<Workspace> workspaces = new ArrayList<>();
 
@@ -76,11 +75,9 @@ public class MainController {
 		return "index";
 	}
 
-    @GetMapping("/customers")
-    public String customers(Model model, Principal principal) {
-        addCustomers();
-        /*
-        log.info("principal: {}", principal);
+	@RequestMapping("/secured")
+    public String secured(Model model, Principal principal) {
+		//model.put("name", baseDomain);
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         Enumeration headerNames = request.getHeaderNames();
@@ -89,26 +86,13 @@ public class MainController {
             System.out.println("" + headerName);
             System.out.println("" + request.getHeader(headerName));
         }
-        */
-        //KeycloakPrincipal kcPrincipal=(KeycloakPrincipal)principal;
-        /*
-        KeycloakSecurityContext session = ((KeycloakPrincipal)(request.getUserPrincipal())).getKeycloakSecurityContext();
-        AccessToken accessToken = session.getToken();
-        String username = accessToken.getPreferredUsername();
-        log.info("User: {} / {}", username, accessToken.getName());
-        */
-        //log.info("AccessToken: " + securityContext.getTokenString());
-        //log.info("User: {} / {}", accessToken.getPreferredUsername(), accessToken.getName());
-        //log.info("Principal: {}", principal.getName());
-        model.addAttribute(customerRepository.findAll());
-        return "customers";
-    }
 
-    @GetMapping("/customers/{id}")
-    public String customer(@PathVariable("id") Long id, Model model) {
-        model.addAttribute(customerRepository.findOne(id));
-        return "customer";
-    }
+        log.info("AccessToken: " + securityContext.getTokenString());
+        log.info("User: {} / {}", accessToken.getPreferredUsername(), accessToken.getName());
+        log.info("Principal: {}", principal.getName());
+		// Return the index page
+		return "secured";
+	}
 
 	@RequestMapping(value = "/workspace", method=RequestMethod.GET)
 	public String showForm(Model model) {
@@ -117,28 +101,6 @@ public class MainController {
       model.addAttribute("baseDomain", baseDomain);
       return "workspace";
 	}
-
-    // add customers for demonstration
-    public void addCustomers() {
-
-        Customer customer1 = new Customer();
-        customer1.setAddress("1111 foo blvd");
-        customer1.setName("Foo Industries");
-        customer1.setServiceRendered("Important services");
-        customerRepository.save(customer1);
-
-        Customer customer2 = new Customer();
-        customer2.setAddress("2222 bar street");
-        customer2.setName("Bar LLP");
-        customer2.setServiceRendered("Important services");
-        customerRepository.save(customer2);
-
-        Customer customer3 = new Customer();
-        customer3.setAddress("33 main street");
-        customer3.setName("Big LLC");
-        customer3.setServiceRendered("Important services");
-        customerRepository.save(customer3);
-    }
 
 	@RequestMapping(value = "/workspace", method=RequestMethod.POST)
 	public String workspaceCreate(Map<String, Object> model, @RequestParam String owner, @RequestParam String git_url) {
