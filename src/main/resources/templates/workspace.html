@@ -57,7 +57,7 @@
   </thead>
   <tbody>
         <tr th:each="workspace : ${workspaces}">
-            <td><a th:href="'https://theia-'+${workspace.name}+'.'+${workspace.name}"
+            <td><a th:href="'https://'+${workspace.name}+'.theia.'+${baseDomain}"
                                th:text="'theia-'+${workspace.name}" target="_blank"/></td>
             <td th:text="${workspace.owner}"/>
             <td><a th:href="${workspace.gitUrl}" th:text="${workspace.gitUrl}" target="_blank"/></td>
