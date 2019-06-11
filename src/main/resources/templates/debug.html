@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::header"></head>
+<body>
+
+<div th:replace="fragments::menu"/>
+
+<div class="container">
+<table>
+    <tr>
+        <td th:text="${username}"></td>
+    </tr>
+</table>
+
+<table>
+    <tr th:each="var : ${#vars}">
+        <td th:text="${var.key}"></td>
+        <td th:text="${var.value}"></td>
+    </tr>
+</table>
+</div>
+
+</body>
+</html>

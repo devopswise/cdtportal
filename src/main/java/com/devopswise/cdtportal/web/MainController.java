@@ -59,8 +59,6 @@ public class MainController {
     @Autowired
     private AccessToken accessToken;
 
-	//List<Workspace> workspaces = new ArrayList<>();
-
     @Autowired
     private WorkspaceRepository workspaceRepository;
 
@@ -69,16 +67,22 @@ public class MainController {
 
 	@RequestMapping("/")
 	public String landingPage(Map<String, Object> model) {
+        model.put("username", accessToken.getPreferredUsername());
 		model.put("baseDomain", baseDomain);
-
-		// Return the index page
 		return "index";
 	}
 
-	@RequestMapping("/secured")
-    public String secured(Model model, Principal principal) {
-		//model.put("name", baseDomain);
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) throws Exception {
+        request.logout();
+        return "redirect:/";
+    }
 
+	@RequestMapping("/workspace")
+    public String workspace(Model model, Principal principal) {
+        model.addAttribute("username", accessToken.getPreferredUsername());
+	    model.addAttribute("workspaces", workspaceRepository.findAll());
+        model.addAttribute("baseDomain", baseDomain);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         Enumeration headerNames = request.getHeaderNames();
         while(headerNames.hasMoreElements()) {
@@ -90,16 +94,15 @@ public class MainController {
         log.info("AccessToken: " + securityContext.getTokenString());
         log.info("User: {} / {}", accessToken.getPreferredUsername(), accessToken.getName());
         log.info("Principal: {}", principal.getName());
-		// Return the index page
-		return "secured";
+		return "workspace";
 	}
 
-	@RequestMapping(value = "/workspace", method=RequestMethod.GET)
-	public String showForm(Model model) {
+	@RequestMapping("/debug")
+    public String debug(Model model, Principal principal) {
+        model.addAttribute("baseDomain", baseDomain);
+        model.addAttribute("username", accessToken.getPreferredUsername());
 
-	  model.addAttribute("workspaces", workspaceRepository.findAll());
-      model.addAttribute("baseDomain", baseDomain);
-      return "workspace";
+		return "debug";
 	}
 
 	@RequestMapping(value = "/workspace", method=RequestMethod.POST)
