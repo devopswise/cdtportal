@@ -84,7 +84,7 @@ public class WorkspaceService {
 	}
 
 	public Workspace getWorkspace(Long id){
-		return (Workspace) workspaceRepository.findOne(id);
+		return (Workspace) workspaceRepository.findById(id).orElse(null);
 	}
 
 	public Workspace createWorkspace(String owner, String gitUrl){
@@ -155,7 +155,7 @@ public class WorkspaceService {
 	public void deleteWorkspace(Long workspaceId){
         log.info("now, will delete workspace with Id: " + workspaceId);
 
-        Workspace workspaceToDelete = workspaceRepository.findOne(workspaceId);
+        Workspace workspaceToDelete = workspaceRepository.findById(workspaceId).orElse(null);
 
 	    log.info("found workspace: " + workspaceToDelete.getId()+ workspaceToDelete.getName());
     	    ProcessBuilder pb = new ProcessBuilder("start-ws",
