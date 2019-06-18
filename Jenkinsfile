@@ -37,7 +37,7 @@ node('jenkins-jnlp-slave-docker-cli') {
          * Pushing multiple tags is cheap, as all the layers are reused. */
         docker.withRegistry('https://index.docker.io/v1/', 'devopswise-dockerhub') {
             app.push("0.9.${env.BRANCH_NAME}.${env.BUILD_NUMBER}")
-            if (env.BRANCH_NAME == 'master')
+            if (env.BRANCH_NAME == 'master') {
                 app.push("latest")
             } else {
                 app.push(env.BRANCH_NAME)

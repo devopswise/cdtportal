@@ -1,0 +1,70 @@
+---
+application:
+  springfox:
+    documentation:
+      swagger:
+        v2:
+          path: /api-docs
+server:
+  contextPath: /
+  port: "8080"
+logging:
+  file: ${CDTPORTAL_LOG}/cdtportal.log
+  level:
+    com:
+      devopswise: DEBUG
+      offbytwo:
+        jenkins: DEBUG
+    org:
+      hibernate:
+        SQL: DEBUG
+endpoints:
+  metrics:
+    sensitive: false
+  logfile:
+    sensitive: false
+  dump:
+    sensitive: false
+info:
+  app:
+    name: cdtportal
+    description: RestAPI to create and configure projects in jenkins,gitea,rocketchat
+    version: 0.9.2
+spring:
+  datasource:
+    url: jdbc:h2:file:${CDTPORTAL_DATA}/h2db;DB_CLOSE_ON_EXIT=FALSE
+  jackson:
+    date-format: io.swagger.RFC3339DateFormat
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: "false"
+  h2:
+    console:
+      enabled: "true"
+      path: /h2-console
+  jpa:
+    open-in-view: "true"
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+  ldap:
+    urls: ldap://cdt.devopswise.co.uk:389
+    base: dc=devopswise,dc=co,dc=uk
+    username: cn=admin,dc=devopswise,dc=co,dc=uk
+    password: password
+jenkins:
+  baseUrl: https://jenkins.cdt.devopswise.co.uk
+  username: admin
+  password: password
+rocketChat:
+  baseUrl: https://rocketchat.cdt.devopswise.co.uk
+  username: local.admin
+  password: password
+  debug: "true"
+gitea:
+  baseUrl: https://gitea.cdt.devopswise.co.uk/api/v1
+  username: local.admin
+  password: password
+  debug: "true"
+cdt:
+  baseDomain: "cdt.devopswise.co.uk"
