@@ -11,6 +11,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <keycloak-version>4.0.0.Final</keycloak-version>
         <springfox-version>2.6.1</springfox-version>
+		<resteasy.version>3.1.4.Final</resteasy.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -75,6 +76,21 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>${keycloak-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>${resteasy.version}</version>
         </dependency>
         <!-- end of keycloak -->
 		<dependency>
