@@ -14,13 +14,14 @@ RUN apt-get update -q \
 	&& chmod +x /usr/local/bin/docker-compose \
         && apt-get clean \
         && rm -rf /var/lib/apt/lists/*
-	
+
 ARG JAR_FILE
 COPY ./misc/image/entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 #RUN chmod +x /entrypoint.sh
 
 RUN mkdir /opt/cdt/script -p
+RUN mkdir /data
 
 COPY ./misc/image/start-ws /opt/cdt/script/start-ws
 COPY ./misc/image/docker-compose.yml.template /opt/cdt/script/docker-compose.yml.template
