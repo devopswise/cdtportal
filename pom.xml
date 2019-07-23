@@ -9,8 +9,10 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <keycloak-version>4.0.0.Final</keycloak-version>
+        <keycloak-starter-version>4.0.0.Final</keycloak-starter-version>
+        <keycloak-version>6.0.1</keycloak-version>
         <springfox-version>2.6.1</springfox-version>
+		<resteasy.version>3.1.4.Final</resteasy.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -63,7 +65,7 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-spring-boot-2-starter</artifactId>
-            <version>${keycloak-version}</version>
+            <version>${keycloak-starter-version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -75,6 +77,26 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>${keycloak-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>${resteasy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson2-provider</artifactId>
+            <version>${resteasy.version}</version>
         </dependency>
         <!-- end of keycloak -->
 		<dependency>
@@ -107,7 +129,6 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox-version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
