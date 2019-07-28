@@ -87,13 +87,14 @@ public class MainController {
 
         /* user with admin role can delete other's workspaces */
         if (isAdmin){
+            log.debug("listing all workspaces:"+workspaceService.getAllWorkspaces());
             model.addAttribute("workspaces", workspaceService.getAllWorkspaces());
         } else {
             model.addAttribute("workspaces", workspaceService.getWorkspaceByOwner(username));
+            log.debug("listing user workspaces:"+workspaceService.getWorkspaceByOwner(username));
         }
 
         model.addAttribute("username", username);
-	    model.addAttribute("workspaces", workspaceService.getWorkspaceByOwner(username));
         model.addAttribute("baseDomain", baseDomain);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         Enumeration headerNames = request.getHeaderNames();
