@@ -81,6 +81,17 @@ public class MainController {
 	@RequestMapping("/workspace")
     public String workspace(Model model, Principal principal) {
         String username = accessToken.getPreferredUsername();
+        Boolean isAdmin = accessToken.getRealmAccess().getRoles().contains("admin");
+        log.debug("realm roles: "+accessToken.getRealmAccess().getRoles().toString());
+        log.debug("others: "+accessToken.getOtherClaims().toString());
+
+        /* user with admin role can delete other's workspaces */
+        if (isAdmin){
+            model.addAttribute("workspaces", workspaceService.getAllWorkspaces());
+        } else {
+            model.addAttribute("workspaces", workspaceService.getWorkspaceByOwner(username));
+        }
+
         model.addAttribute("username", username);
 	    model.addAttribute("workspaces", workspaceService.getWorkspaceByOwner(username));
         model.addAttribute("baseDomain", baseDomain);
@@ -92,9 +103,9 @@ public class MainController {
             System.out.println("" + request.getHeader(headerName));
         }
 
-        log.info("AccessToken: " + securityContext.getTokenString());
-        log.info("User: {} / {}", accessToken.getPreferredUsername(), accessToken.getName());
-        log.info("Principal: {}", principal.getName());
+        log.debug("AccessToken: " + securityContext.getTokenString());
+        log.debug("User: {} / {}", accessToken.getPreferredUsername(), accessToken.getName());
+        log.debug("Principal: {}", principal.getName());
 		return "workspace";
 	}
 
