@@ -80,8 +80,9 @@ public class MainController {
 
 	@RequestMapping("/workspace")
     public String workspace(Model model, Principal principal) {
-        model.addAttribute("username", accessToken.getPreferredUsername());
-	    model.addAttribute("workspaces", workspaceRepository.findAll());
+        String username = accessToken.getPreferredUsername();
+        model.addAttribute("username", username);
+	    model.addAttribute("workspaces", workspaceService.getWorkspaceByOwner(username));
         model.addAttribute("baseDomain", baseDomain);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         Enumeration headerNames = request.getHeaderNames();
