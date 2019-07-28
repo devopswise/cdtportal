@@ -30,13 +30,14 @@
                 <li><a href="/workspace">Workspaces</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li th:if="${username != null}" class="dropdown">
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <span class="glyphicon glyphicon-user"/>&nbsp;
                         <span th:text="${username}"></span>&nbsp;
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
+                        <li><a href="https://www.devopswise.co.uk/subscription"><span class="glyphicon glyphicon-user"/> My Subscription</a></li>
                         <li><a href="/logout"><span class="glyphicon glyphicon-log-out"/> Logout</a></li>
                     </ul>
                 </li>
